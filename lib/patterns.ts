@@ -48,6 +48,24 @@ const files: { [key: string]: string[] | FileFunction } = {
     });
     return filtered;
   },
+  "0.24.1": function (pkg: Pkg) {
+    if (!pkg.files) {
+      return [];
+    }
+    // list of files to ignore
+    const ignore = [/^pyodide.m?js.*/, /.+\.d\.ts$/, /.+\.html$/];
+    // files to ensure are always included
+    const always = ["package.json"];
+    const filtered = pkg.files.filter((file) => {
+      return !ignore.some((v) => file.match(v));
+    });
+    always.forEach((f) => {
+      if (!filtered.includes(f)) {
+        filtered.push(f);
+      }
+    });
+    return filtered;
+  },
 };
 export const versions = Object.keys(files);
 
